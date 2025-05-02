@@ -1,0 +1,27 @@
+{% extends "NolisApp/base.html" %}
+{% block content %}
+
+
+<h1 class="Title">Nolis pizzeria</h1>
+<h2 class="Subtitle1">Choose Up to 5 ingredients:</h2>
+ {# Makes error message appear at top of page in red#}
+{% if error_message %}
+    <p style="color: red;">{{ error_message }}</p>
+{% endif %}
+{#  get the Ingredients associated with the flavor#}
+<form  method="post" action="{% url 'process_ingredients' %}">
+    {% csrf_token %}
+    <ul class="Form">
+    {# for loop to list flavors in check boxes#}
+        {% for item in ingredients %}
+            <div class="checkbox">
+                <input type="checkbox" id="ingredient_{{ item.id }}" name="selected_ingredients" value="{{ item.id }}">
+                <label for="ingredient_{{ item.id }}">{{ item.Ingredients_Name }}</label>
+            </div>
+        {% empty %}
+            <li>No ingredients available for this flavor.</li>
+        {% endfor %}
+    </ul>
+    <button class="recommendationbtn" type="submit">Get Recommendations</button>
+</form>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "NolisApp/base.html" %}
+{% load static %}
+{% block content %}
+   <div class="recommendation-header">
+    <h1 class="Title">Pizza Recommendations</h1>
+    <img src="{% static 'Images/NolisLogo.png' %}" alt="Your Logo">
+</div>
+    
+{% if products %}
+    <ul style="padding-left: 0;">
+        {% for product in products|slice:":2" %}
+            <li style="margin-bottom: 20px; list-style-type: none;">
+                <img src="{{ product.ProductImage.url }}" alt="{{ product.Product_Name }}">
+                <p><strong>Name:</strong> {{ product.Product_Name }}</p>
+                <p><strong>Price:</strong> ${{ product.Price }}</p>
+                <p><strong>Description:</strong> {{ product.Description }}</p>
+                <p><strong>Ingredients:</strong> 
+                    {% for ingredient in product.ProductIngredients.all %}
+                        {{ ingredient.Ingredients_Name }}
+                    {% endfor %}
+                </p>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No pizzas found that match your selected ingredients.</p>
+{% endif %}
+{% endblock %}

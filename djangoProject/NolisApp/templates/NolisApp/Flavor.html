@@ -1,0 +1,12 @@
+{% extends "NolisApp/base.html" %}
+{% block content %}
+    <h1 class="Title">Nolis pizzeria</h1>
+    
+    <h2 class="Subtitle">Choose Your Flavor:</h2>
+    <form method="post">
+        {% csrf_token %}
+        <button class="flavorbtn" type="submit" name="flavor" value="Savory">Savory</button>
+        <button class="flavorbtn" type="submit" name="flavor" value="Sweet">Sweet</button>
+        <button class="flavorbtn" type="submit" name="flavor" value="Spicy">Spicy</button>
+    </form>
+{% endblock %}
