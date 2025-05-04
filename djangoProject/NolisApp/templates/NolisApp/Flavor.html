@@ -1,7 +1,9 @@
 {% extends "NolisApp/base.html" %}
+{% load static %}
 {% block content %}
-    <h1 class="Title">Nolis pizzeria</h1>
-    
+ <div class="Title">
+    <img src="{% static 'Images/NolisLogo.png' %}" alt="Your Logo">
+</div>
     <h2 class="Subtitle">Choose Your Flavor:</h2>
     <form method="post">
         {% csrf_token %}
