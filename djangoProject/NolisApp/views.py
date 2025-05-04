@@ -44,7 +44,7 @@ def process_ingredients(request):
             }
             return render(request, 'NolisApp/Ingredients.html', context)
 
-        #sets limit of chosen Ingredients to 5
+        #sets limit of chosen Ingredients to 5 and minumum of 1
         if len(selected_ingredients) > 5:
             ingredients = IngredientModel.objects.filter(flavor_id=flavor_id)
             context = {
@@ -57,34 +57,32 @@ def process_ingredients(request):
             return redirect(reverse('Recommendation'))
     else:
         return redirect(reverse('Ingredients'))
-
+# posts selected ingredients
 
 def Recommendation(request):
     flavor_id = request.session.get('flavor_id')
     selected_ingredient_ids = request.session.get('selected_ingredient_ids')
-
     if not flavor_id:
         return redirect('Flavor')
     if not selected_ingredient_ids:
         return redirect('Ingredients')
-
     try:
         selected_ingredient_ids = [int(id) for id in selected_ingredient_ids]
     except ValueError:
-        messages.error(request, "Invalid ingredient IDs. Please select ingredients again.")
+        messages.error(request, "Invalid ingredient IDs. Please select ingredients again.")#
         return redirect('Ingredients')
 
     selected_flavor = FlavorPreference.objects.get(id=flavor_id)
     selected_ingredients = IngredientModel.objects.filter(id__in=selected_ingredient_ids)
 
-    products = Product.objects.filter(ProductIngredients__in=selected_ingredients, Available=True).distinct()
+    products = Product.objects.filter(ProductIngredients__in=selected_ingredients, Available=True).distinct() # filters out unavaliable products
     products = products.annotate(
         match_count=Count('ProductIngredients', filter=Q(ProductIngredients__in=selected_ingredients))
     ).order_by('-match_count')
-
     context = {
         'products': products,
         'selected_flavor': selected_flavor,
         'selected_ingredients': selected_ingredients,
     }
     return render(request, 'NolisApp/Recommendation.html', context)
+# takes posted ingredients and finds closest pizza
